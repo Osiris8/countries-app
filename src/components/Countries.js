@@ -6,6 +6,7 @@ import Card from "./Card";
 function Countries() {
   const [data, setData] = useState([]);
   const countrieArray = ["Africa", "America", "Asia", "Europe", "Oceania"];
+  const [search, setSearch] = useState("");
   const [selectedContinent, setSelectedContinent] = useState("");
   useEffect(() => {
     axios
@@ -24,6 +25,7 @@ function Countries() {
                 <i className="fa fa-search" aria-hidden="true"></i>
               </span>
               <input
+                onChange={(e) => setSearch(e.target.value)}
                 className="placeholder:text-slate-400 block bg-white w-full border border-slate-300 rounded-md py-2 pl-9 pr-3 shadow-sm focus:outline-none focus:border-sky-500 focus:ring-sky-500 focus:ring-1 sm:text-sm"
                 placeholder="Search for country"
               />
@@ -35,7 +37,7 @@ function Countries() {
               type="button"
               className="btn btn-info"
             >
-              Annuler la recherche
+              Annuler le filtre
             </button>
           )}
 
@@ -65,14 +67,19 @@ function Countries() {
         </div>
       </div>
       <div className="row">
-        {data
-          .filter((country) =>
-            country.continents[0].includes(selectedContinent)
-          )
+        {search
+          ? data
+              .filter((country) =>
+                country.translations.fra.common.includes(search)
+              )
 
-          .map((country, index) => (
-            <Card key={index} country={country} />
-          ))}
+              .map((country, index) => <Card key={index} country={country} />)
+          : data
+              .filter((country) =>
+                country.continents[0].includes(selectedContinent)
+              )
+
+              .map((country, index) => <Card key={index} country={country} />)}
       </div>
     </div>
   );
